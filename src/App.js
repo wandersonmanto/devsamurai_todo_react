@@ -9,14 +9,14 @@ function App() {
   const ESCAPE_KEY = 27;
   const ENTER_KEY = 13;
 
-  const initialTodos = [
-    { id: 1, title: "Estudar React", checked: false },
-    { id: 2, title: "Estudar Inglês", checked: true },
-    { id: 3, title: "Tocar guitarra", checked: false },
-    { id: 4, title: "Aprender Python", checked: false },
-  ];
+  // const initialTodos = [
+  //   { id: 1, title: "Estudar React", checked: false },
+  //   { id: 2, title: "Estudar Inglês", checked: true },
+  //   { id: 3, title: "Tocar guitarra", checked: false },
+  //   { id: 4, title: "Aprender Python", checked: false },
+  // ];
 
-  const [todos] = useState(initialTodos);
+  const [todos, setTodos] = useState([]);
   const [value, setValue] = useState("");
 
   const erase = () => {
@@ -24,7 +24,14 @@ function App() {
   };
 
   const submit = () => {
-    console.log('submit', value);
+    setTodos([
+      ...todos,
+      {
+        id: new Date().getTime(),
+        title: value,
+        checked: false,
+      },
+    ]);
     erase();
   }
 
@@ -38,6 +45,18 @@ function App() {
     } else if (event.which === ESCAPE_KEY) {
       erase();
     }
+  };
+
+  const onToggle = (todo) => {
+    setTodos(
+      todos.map((obj) =>
+        obj.id === todo.id ? { ...obj, checked: !todo.checked } : obj
+      )
+    );
+  };
+
+  const onRemove = (todo) => {
+    setTodos(todos.filter((obj) => obj.id !== todo.id));
   };
 
   return (
@@ -56,8 +75,19 @@ function App() {
         <ul className="todo-list">
           {todos.map((todo) => (
             <li key={todo.id.toString()}>
-              <span className="todo">{todo.title}</span>
-              <button className="remove" type="button">
+              <span 
+                className={["todo", todo.checked ? "checked" : ""].join(" ")}
+                onClick={() => onToggle(todo)}
+                onKeyPress={() => onToggle(todo)}
+                role="button"
+                tabIndex={0}
+              >
+                  {todo.title}</span>
+              <button
+                className="remove" 
+                type="button"
+                onClick={() => onRemove(todo)}
+              >
                 <MdDelete size={28} />
               </button>
             </li>

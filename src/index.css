@@ -29,11 +29,15 @@ code {
     monospace;
 }
 
+ul,
+li,
 input,
 select,
 textarea {
   border: none;
   outline: none;
+  padding: 0;
+  margin: 0;
 }
 
 ::placeholder {
